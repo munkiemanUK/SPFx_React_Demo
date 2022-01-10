@@ -10,7 +10,7 @@ export interface IReactDemoState{
     {
       "Title" : "",
       "ID" : "",
-      "Name" : ""
+      "RequestID" : ""
     }
   ]
 }
@@ -27,7 +27,7 @@ export default class ReactDemo extends React.Component<IReactDemoProps, IReactDe
         {
           "Title" : "",
           "ID" : "",
-          "Name" : ""          
+          "RequestID" : ""          
         }
       ]
     };
@@ -41,18 +41,18 @@ export default class ReactDemo extends React.Component<IReactDemoProps, IReactDe
   }
 
   public componentDidMount(): void {
-    
+    let reactHandler = this;
     console.log('stage title from componentDidMount : ' + this.state.stageTitle);
     this.setState({
       stageTitle:'componentDidMount has been called'
     });
     
     $.ajax({
-      url: `${ReactDemo.siteURL}/_api/web/lists/getbytitle/('PO_Request_Test)/items`,
+      url: `${ReactDemo.siteURL}/_api/web/lists/getbytitle('PO_Request_Test')/items`,
       type:'GET',
       headers: {'Accept': 'application/json; odata=verbose'},
       success: function(data){
-        this.setState({
+        reactHandler.setState({
           listItems: data.d.results
         });
       },
@@ -86,6 +86,40 @@ export default class ReactDemo extends React.Component<IReactDemoProps, IReactDe
             </div>
           </div>
         </div>
+        <table className={styles.row}>
+          {
+            this.state.listItems.map(function (listItem, listItemkey){
+              let fullURL:string=`${ReactDemo.siteURL}/lists/PO_Request_Test/DispForm.aspx?ID=${listItem.ID}`;
+              return(
+                <tr>
+                  <td>
+                    <a className={styles.label} href={fullURL}>{listItem.Title}</a>
+                  </td>
+                  <td className={styles.label}>
+                    {listItem.ID}
+                  </td>
+                  <td className={styles.label}>
+                    {listItem.RequestID}
+                  </td>
+                </tr>
+              );
+            })
+          }
+        </table>
+        <ol>
+          {
+            this.state.listItems.map(function (listItem, listItemkey){
+              let fullURL:string=`${ReactDemo.siteURL}/lists/PO_Request_Test/DispForm.aspx?ID=${listItem.ID}`;
+              return(
+                <li className={styles.label}>
+                    <a className={styles.label} href={fullURL}>{listItem.Title}
+                      <span>{listItem.Title}</span>,<span>{listItem.ID}</span>,<span>{listItem.RequestID}</span>
+                    </a>
+                </li>
+              );
+            })            
+          }
+        </ol>
       </div>
     );
   }

@@ -13,7 +13,6 @@ import { IReactDemoProps } from './components/IReactDemoProps';
 
 export interface IReactDemoWebPartProps {
   newDescription: string;
-  
 }
 
 export default class ReactDemoWebPart extends BaseClientSideWebPart<IReactDemoWebPartProps> {
